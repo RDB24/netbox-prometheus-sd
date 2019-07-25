@@ -24,7 +24,7 @@ def main(args):
                 rdbport = device.custom_fields['prom_target_port']
             else:
                 rdbport = str(args.port)
-            labels = {'__port__': rdbport}
+            labels = {'__port__': str(rdbport)}
             if getattr(device, 'name', None):
                 labels['__meta_netbox_name'] = device.name
             else:
