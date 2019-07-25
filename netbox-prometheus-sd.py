@@ -5,7 +5,6 @@ import json
 import argparse
 import itertools
 import netaddr
-
 import pynetbox
 
 
@@ -21,7 +20,11 @@ def main(args):
 
     for device in itertools.chain(devices, vm, ips):
         if device.custom_fields.get(args.custom_field):
-            labels = {'__port__': str(args.port)}
+            if (device.custom_fields['prom_target_port']):
+                rdbport = device.custom_fields['prom_target_port']
+            else:
+                rdbport = str(args.port)
+            labels = {'__port__': rdbport}
             if getattr(device, 'name', None):
                 labels['__meta_netbox_name'] = device.name
             else:
@@ -61,12 +64,16 @@ def main(args):
             for target in device_targets:
                 target_labels = labels.copy()
                 target_labels.update(target)
-                if hasattr(device, 'primary_ip'):
-                    address = device.primary_ip
+                if (device.custom_fields['prom_target']):
+                    rdbaddress = device.custom_fields['prom_target']
+                elif (device.primary_ip):
+                    rdbaddress = netaddr.IPNetwork(str(device.primary_ip)).ip
+                elif (device.name):
+                    rdbaddress = device.name
                 else:
-                    address = device
-                targets.append({'targets': ['%s:%s' % (str(netaddr.IPNetwork(address.address).ip),
-                                                       target_labels['__port__'])],
+                    rdbaddress =  repr(device)
+
+                targets.append({'targets': ['%s:%s' % (str(rdbaddress), rdbport)],
                                 'labels': target_labels})
 
     if args.output == '-':

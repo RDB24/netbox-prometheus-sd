@@ -1,5 +1,4 @@
 FROM ubuntu:bionic
-MAINTAINER Antoine Millet <antoine.millet@enix.fr>
 
 RUN apt update && apt install -y python3-pip
 RUN pip3 install pynetbox netaddr
