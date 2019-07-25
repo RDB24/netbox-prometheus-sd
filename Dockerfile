@@ -6,4 +6,4 @@ COPY netbox-prometheus-sd.py /bin/netbox-prometheus-sd
 RUN chmod +x /bin/netbox-prometheus-sd
 RUN mkdir /output
 
-CMD while true; do (/bin/netbox-prometheus-sd "$NETBOX_URL" "$NETBOX_TOKEN" "/output/${OUTPUT_FILE-netbox.json}"; sleep $INTERVAL); done
+CMD while true; do (/bin/netbox-prometheus-sd "$NETBOX_URL" "$NETBOX_TOKEN" "/output/${OUTPUT_FILE-netbox.json}" -p $ExporterPort ; sleep $INTERVAL); done
