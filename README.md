@@ -14,6 +14,7 @@ This custom field is named:
  - `prom_labels` 
  - `prom_target`
  - `prom_target_port`
+
 and can be created in the Netbox admin page (Home -> Extras -> Custom fields) with the following settings:
 
 - Objects: select `dcim > device` and `virtualization > virtual machine`
