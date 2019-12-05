@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import sys
+import os
 import json
 import argparse
 import itertools
@@ -76,15 +77,21 @@ def main(args):
                 targets.append({'targets': ['%s:%s' % (str(rdbaddress), rdbport)],
                                 'labels': target_labels})
 
+    temp_file = None
     if args.output == '-':
         output = sys.stdout
     else:
-        output = open(args.output, 'w')
+        temp_file = '{}.tmp'.format(args.output)
+        output = open(temp_file, 'w')
 
     json.dump(targets, output, indent=4)
     output.write('\n')
 
-    output.close()
+    if temp_file:
+        output.close()
+        os.rename(temp_file, args.output)
+    else:
+        output.flush()
 
 
 if __name__ == '__main__':
